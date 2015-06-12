@@ -119,8 +119,10 @@ var contactSchema = newSchema({
 
 ## Finally:
 
+```
 var c = Contact.create({ ...info... });
 c.save();
+```
 
 ## References
 
