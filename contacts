@@ -9,7 +9,7 @@ program.version('0.1.0');
 program
   .command('init')
   .description('initialize the database')
-  .action(function(env, options) {
+  .action(function() {
 
   }).on('--help', function() {
     console.log('Example:');
@@ -24,12 +24,14 @@ program
   .option('--last-name [name]', 'contact\'s last name')
   .action(function() {
 
-    var c = new Contact({
+    var c = Contact.create({
       name: {
         first: this.firstName,
         last: this.lastName
       }
     });
+
+    c.save();
 
   }).on('--help', function() {
     console.log('Example:');
