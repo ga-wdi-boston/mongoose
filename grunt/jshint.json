@@ -1,0 +1,25 @@
+{
+  "all": {
+    "src": ["<%= paths.project %>"],
+    "ignore": [
+      "node_modules/"
+    ]
+  },
+  "options": {
+
+    "curly": true,
+    "eqeqeq": true,
+    "strict": false,
+    "undef": true,
+    "sub": true,
+    "esnext": true,
+    "globalstrict": true,
+    "quotmark": false,
+
+    "jquery": true,
+    "devel": true,
+    "node": true,
+    "jasmine": true
+
+  }
+}
