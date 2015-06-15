@@ -47,7 +47,7 @@ program
     search[field] = criterion[0] === '/' ?
       new RegExp(criterion.slice(1, criterion.length-1)) :
       criterion;
-    Contact.find(search).exec(function(err, contacts){
+    Contact.find(search).exec(function(err, contacts) {
       if (err) {
         console.log('search error');
         console.log(err);
@@ -58,11 +58,68 @@ program
       });
       done();
     });
-
   }).on('--help', function() {
     console.log('Example:');
     console.log();
     console.log('  $ contacts find <field> <criterion>');
+  });
+
+program
+  .command('update <search field> <criterion> <update field> <value>')
+  .description('update contacts')
+  .action(function(searchField, criterion, updateField, value) {
+    var search = new Object();
+    search[searchField] = criterion[0] === '/' ?
+      new RegExp(criterion.slice(1, criterion.length-1)) :
+      criterion;
+      //{ name.first: /^[AaBb]/ }
+    Contact.find(search).exec(function(err, contacts) {
+      if (err) {
+        console.log('search error');
+        console.log(err);
+        return;
+      }
+      contacts.forEach(function(contact) {
+        console.log("Updating: " + contact._id);
+        var up = {};
+        up[updateField] = value;
+        var query = Contact.update({ _id: contact._id}, up );
+        query.exec();
+      });
+      setTimeout(done, 0);
+    });
+  }).on('--help', function() {
+    console.log('Example:');
+    console.log();
+    console.log('  $ contacts update <search field> <criterion> <update field> <value>');
+  });
+
+program
+  .command('rm <field> <criterion>')
+  .description('rm contacts')
+  .action(function(field, criterion) {
+    var search = {};
+    search[field] = criterion[0] === '/' ?
+      new RegExp(criterion.slice(1, criterion.length-1)) :
+      criterion;
+      //{ name.first: /^[AaBb]/ }
+    Contact.find(search).exec(function(err, contacts) {
+      if (err) {
+        console.log('search error');
+        console.log(err);
+        return;
+      }
+      contacts.forEach(function(contact) {
+        console.log("Removing: " + contact._id);
+        var query = Contact.remove({ _id: contact._id});
+        query.exec();
+      });
+      setTimeout(done, 0);
+    });
+  }).on('--help', function() {
+    console.log('Example:');
+    console.log();
+    console.log('  $ contacts rm <field> <criterion>');
   });
 
 var testData = ['node',
