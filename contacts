@@ -3,6 +3,11 @@
 var util = require('util');
 var program = require('commander');
 var Contact = require('./lib/contacts.js');
+var mongoose = require('./lib/mongoose-contacts.js');
+
+var done = function(){
+  mongoose.connection.close();
+};
 
 program.version('0.1.0');
 
@@ -18,25 +23,46 @@ program
   });
 
 program
-  .command('add')
+  .command('add <first name> <last name>')
   .description('add a user to the contacts database')
-  .option('--first-name [name]', 'contact\'s first name')
-  .option('--last-name [name]', 'contact\'s last name')
-  .action(function() {
-
+  .action(function(firstName, lastName) {
     var c = Contact.create({
       name: {
-        first: this.firstName,
-        last: this.lastName
+        first: firstName,
+        last: lastName
       }
     });
+    done();
+  }).on('--help', function() {
+    console.log('Example:');
+    console.log();
+    console.log('  $ contacts add Charlton Wilbur');
+  });
 
-    c.save();
+program
+  .command('find <field> <criterion>')
+  .description('find contacts')
+  .action(function(field, criterion) {
+    var search = {};
+    search[field] = criterion[0] === '/' ?
+      new RegExp(criterion.slice(1, criterion.length-1)) :
+      criterion;
+    Contact.find(search).exec(function(err, contacts){
+      if (err) {
+        console.log('search error');
+        console.log(err);
+        return;
+      }
+      contacts.forEach(function(contact){
+        console.log(contact);
+      });
+      done();
+    });
 
   }).on('--help', function() {
     console.log('Example:');
     console.log();
-    console.log('  $ contacts add --first-name Charlton --last-name Wilbur');
+    console.log('  $ contacts find <field> <criterion>');
   });
 
 var testData = ['node',
