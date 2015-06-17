@@ -52,9 +52,9 @@ But this is not as useful as it might be: by default, all keys and values in a M
 var catSchema = new mongoose.Schema({
     catName: { type: String, required: true },
     catNickname: String,
-    catAge: { type: Number, required: true, min: 0, max: 25 },
-    ownerFirstName: { type: String, required: true },
-    ownerLastName: { type: String, required: true }, 
+    sex: { type: String, enum: { values: ['male', 'female']},
+    age: { type: Number, required: true, min: 0, max: 25 },
+    ownerName: { type: String, required: true }
 });
 ```
 
@@ -76,19 +76,18 @@ Mongoose provides a Modelname.create() method.  It does not return an object; it
 
 ```javascript
 Cat.create({
-    catName: 'Domino',
-    catAge: 1,
-    ownerFirstName: 'Charlton',
-    ownerLastNmae: 'Wilbur'
-  },
-  function(error, cat) {
-    if (error) {
-      console.error(error);
-    } else {
-      console.log('Cat %s was created!', cat.catName);
-    }
+  catName: 'Domino',
+  age: 1,
+  sex: 'male',
+  ownerName: 'Charlton Wilbur'
+}, function(error, cat) {
+  // create returns the new cat in a callbac
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('we created %s', cat.catName);
   }
-);
+});
 ```
 
 ### Retrieving a cat:
@@ -97,18 +96,19 @@ Mongoose provides findOne, findMany, and findById methods:
 
 ```javascript
 Cat.findOne({
-  name: 'Domino'
-}, function(err, cat) {
-  console.log('found %s', cat.catName);
+  catName: 'Mr. Dickens'
+}, function(error, cat) {
+  console.log('we found %s', cat.catName);
 });
+
 ```
 
 ```javascript
 Cat.find({
-  catAge: { $gt: 2 }
-}, function(err, catList) {
+  sex: 'male'
+}, function(error, catList) {
   catList.forEach(function(cat) {
-    console.log('list found %s', cat.catName);
+    console.log('we found %s', cat.catName);
   });
 });
 ```
@@ -129,16 +129,17 @@ Cat.findById(ObjectId("55818163c3b65d8033134851"),
 
 ## Updates
 
-Domino has a birthday:
+Mr. Dickens has a birthday:
 
 ```javascript
 Cat.findOne({
-  name: 'Domino'
-}, function(err, cat) {
-    cat.age = 2
-    // or cat.age.$inc; $inc is a MongoDB/mongoose way of saying ++
-    cat.save(); 
-});
+    catName: 'Mr. Dickens'
+  },
+  function(error, cat) {
+    cat.age = cat.age + 1;
+    console.log('updated %s', cat.catName);
+  }
+);
 ```
 
 Model objects are just like any other Javascript object, and we can reach in and fiddle with keys and values when we like -- though Mongoose will yell at us if we break the rules.
@@ -148,49 +149,69 @@ Model objects are just like any other Javascript object, and we can reach in and
 Domino is going to a different vet.
 
 ```javascript
-Cat.findOne({
-  name: 'Domino'
-}, function(err, cat) {
-    cat.age = 2
-    // or cat.age.$inc; $inc is a MongoDB/mongoose way of saying ++
-    cat.remove(); 
+Cat.remove({
+  catName: 'Domino'
 });
+
 ```
+
+## Closing things out
+
+When you're done with all the callbacks, you need to call this:
+
+```javascript
+mongoose.disconnect();
+```
+
+In most servers this will happen in the context of a graceful exit handler, though if you have another way of knowing all your work is done that works too.
 
 ## More Complex Validation
 
 Back to the schema!
 
-```
+```javascript
 var contactSchema = newSchema({
 
-    // first and last names are required
+  // first and last names are required
 
-    name: {
-        first: { type: String, required: true },
-        last: { type: String, required: true },
+  name: {
+    first: {
+      type: String,
+      required: true
     },
+    last: {
+      type: String,
+      required: true
+    },
+  },
 
-    // title is not required
+  // title is not required
 
-    title: String,
+  title: String,
 
-    // age must be between 21 and 65
+  // age must be between 21 and 65
 
-    age: { type: Number, min: 21, max: 65 },
+  age: {
+    type: Number,
+    min: 21,
+    max: 65
+  },
 
-    // political party must be in the list
+  // political party must be in the list
 
-    politicalParty: {  type: String, 
-            enum: { values: 'Republican Democrat Libertarian Green',
-                    message: 'enum failed at path {PATH} with value {VALUE}' },
-            }
-        },
+  politicalParty: {
+    type: String,
+    enum: {
+      values: ['Republican', 'Democrat', 'Libertarian', 'Green']
+    }
+  },
 
-    // phone numbers must match the regular expression
+  // phone numbers must match the regular expression
 
-    phoneNumber: { type: String,
-        match: /(\d?\D*\d{3}\D*\d{3}\D*\d{4})/ },
+  phoneNumber: {
+    type: String,
+    match: /(\d?\D*\d{3}\D*\d{3}\D*\d{4})/
+  }
 
 });
 ```

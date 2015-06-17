@@ -11,31 +11,27 @@ var Cat = require('./lib/cats.js');
 
 async.series([
 
+    // Example CREATE - Domino
     function(done) {
-
-      // Example CREATE - Domino
-
       Cat.create({
         catName: 'Domino',
         age: 1,
         sex: 'male',
         ownerName: 'Charlton Wilbur'
       }, function(error, cat) {
-        // create returns the new cat in a callback
-
+        // create returns the new cat in a callbac
         if (error) {
           console.error(error);
         } else {
           console.log('we created %s', cat.catName);
         }
+
+        done();
       });
-
-      done();
     },
+
+    // second example CREATE
     function(done) {
-
-      // second example CREATE
-
       Cat.create({
         catName: 'Mr. Dickens',
         age: 5,
@@ -47,52 +43,82 @@ async.series([
         } else {
           console.log('we created %s', cat.catName);
         }
+
+        done();
       });
-      done();
     },
+
+    // example RETRIEVE - find (many)
     function(done) {
-
-      // example RETRIEVE
-      // find (finds many)
-
       Cat.find({
         sex: 'male'
-      }, {}, function(error, catList) {
-        debugger;
+      }, function(error, catList) {
         catList.forEach(function(cat) {
           console.log('we found %s', cat.catName);
         });
+        done();
       });
-
-      done();
     },
+
+    // example RETRIEVE
+    // findOne (finds at most one, no matter how many there are)
     function(done) {
-
-      // example RETRIEVE
-      // findOne (finds at most one, no matter how many there are)
-
       Cat.findOne({
-        name: 'Mr. Dickens'
-      }, 'catName ownerName', function(error, cat) {
-        debugger;
+        catName: 'Mr. Dickens'
+      }, function(error, cat) {
         console.log('we found %s', cat.catName);
+        done();
       });
+    },
+
+    // example UPDATE - increase Mr. Dickens's age by 1
+    function(done) {
+      Cat.findOne({
+          catName: 'Mr. Dickens'
+        },
+        function(error, cat) {
+          cat.age = cat.age + 1;
+          console.log('updated %s', cat.catName);
+          done();
+        }
+      );
+    },
+
+    // example UPDATE - Domino changes owners
+    function(done) {
+      Cat.findOne({
+          catName: 'Domino'
+        },
+        function(error, cat) {
+          cat.ownerName = 'Jacob Miller';
+          cat.save();
+          console.log('updated %s', cat.catName);
+          done();
+        }
+      );
+    },
+
+    // example DELETE - Domino's new owners use a different vet
+    function(done) {
+      Cat.remove({
+        catName: 'Domino'
+      });
+      console.log('removed');
       done();
     },
+
+    // get rid of all the cats so we can run this again next time
+    function(done) {
+      Cat.remove({});
+      console.log('all cats removed');
+      done();
+    }
   ],
 
   function(error, results) {
     if (error) {
       console.error(error);
     }
+
+    mongoose.disconnect();
   });
-
-
-
-// cat: {
-//   catName: String,
-//   catNickname: String,
-//   age:  Number,
-//   sex:  String,
-//   ownerName: String,
-// }
