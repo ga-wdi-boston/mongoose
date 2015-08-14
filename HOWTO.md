@@ -1,26 +1,28 @@
+![General Assembly Logo](http://i.imgur.com/ke8USTq.png)
+
 # Mongoose Reference
 
 ## How to set up a project with Mongoose and MongoDB.
 
 1. Ensure that you have a working Node.js installation.  (See the installfest documentation from the beginning of the class or consult the web.)
 
-2. Ensure that you have a working MongoDB. See the INSTALL-MongoDB.md file in this repository.
+2. Ensure that you have a working MongoDB. See the INSTALL.md file in the [An Introduction to MongoDB](https://github.com/ga-wdi-boston/mongodb-intro) repository.
 
 3. Install mongoose in your project:
 
-    ```javascript
-    npm install mongoose --save
+    ```bash
+    $ npm install mongoose --save
     ```
 
 4. In your top level entry file, and in any module that uses mongoose directly, add the line:
 
-    ```javascript
+    ```js
     var mongoose = require('mongoose');
     ```
 
 5. In your top level entry file, add this line to connect to your database:
 
-    ```javascript
+    ```js
     mongoose.connect('mongodb://localhost/dbname');
     ```
 
@@ -34,9 +36,9 @@ Mongoose uses *schemas* to impose requirements on data structures.  Remember, Mo
 
 We want one MongoDB database collection to contain Cats.  So we create an appropriate schema.
 
-The simplest schema indicates the keys and values we accept: 
+The simplest schema indicates the keys and values we accept:
 
-```javascript
+```js
 var catSchema = new mongoose.Schema({
     catName: String,
     catNickname: String,
@@ -46,9 +48,9 @@ var catSchema = new mongoose.Schema({
 });
 ```
 
-But this is not as useful as it might be: by default, all keys and values in a Mongoose-controlled document are optional. A more useful schema will also indicat what is required and what is optional, and what is necessary for validation:
+But this is not as useful as it might be: by default, all keys and values in a Mongoose-controlled document are optional. A more useful schema will also indicate what is required and what is optional, and what is necessary for validation:
 
-```javascript
+```js
 var catSchema = new mongoose.Schema({
     catName: { type: String, required: true },
     catNickname: String,
@@ -58,9 +60,9 @@ var catSchema = new mongoose.Schema({
 });
 ```
 
-Once you have done this, you can say 
+Once you have done this, you can say
 
-```javascript
+```js
 var Cat = mongoose.model('Cat', catSchema);
 ```
 
@@ -68,13 +70,13 @@ and you have a model that you can use elsewhere in your project.
 
 (There are many more validation options; see the section below.)
 
-## Using Models 
+## Using Models
 
 ### Creating a cat:
 
 Mongoose provides a Modelname.create() method.  It does not return an object; it calls a callback.
 
-```javascript
+```js
 Cat.create({
   catName: 'Domino',
   age: 1,
@@ -94,7 +96,7 @@ Cat.create({
 
 Mongoose provides findOne, findMany, and findById methods:
 
-```javascript
+```js
 Cat.findOne({
   catName: 'Mr. Dickens'
 }, function(error, cat) {
@@ -103,7 +105,7 @@ Cat.findOne({
 
 ```
 
-```javascript
+```js
 Cat.find({
   sex: 'male'
 }, function(error, catList) {
@@ -115,7 +117,7 @@ Cat.find({
 
 (In neither of the above do we do error handling.  It's included below.)
 
-```javascript
+```js
 Cat.findById(ObjectId("55818163c3b65d8033134851"),
   function(error, cat) {
     if (error) {
@@ -131,7 +133,7 @@ Cat.findById(ObjectId("55818163c3b65d8033134851"),
 
 Mr. Dickens has a birthday:
 
-```javascript
+```js
 Cat.findOne({
     catName: 'Mr. Dickens'
   },
@@ -148,7 +150,7 @@ Model objects are just like any other Javascript object, and we can reach in and
 
 Domino is going to a different vet.
 
-```javascript
+```js
 Cat.remove({
   catName: 'Domino'
 });
@@ -159,7 +161,7 @@ Cat.remove({
 
 When you're done with all the callbacks, you need to call this:
 
-```javascript
+```js
 mongoose.disconnect();
 ```
 
@@ -167,10 +169,10 @@ In most servers this will happen in the context of a graceful exit handler, thou
 
 ## More Complex Validation
 
-Back to the schema!
+Back to the schema.
 
-```javascript
-var contactSchema = newSchema({
+```js
+var contactSchema = new Schema({
 
   // first and last names are required
 
@@ -215,6 +217,3 @@ var contactSchema = newSchema({
 
 });
 ```
-
-
-

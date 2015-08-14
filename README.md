@@ -1,51 +1,57 @@
+![General Assembly Logo](http://i.imgur.com/ke8USTq.png)
+
 # An Introduction to Mongoose
 
-We saw some of the weaknesses of document databases this morning: there's no protection against entering data in any arbitrary format, and no validation of any sort.  Mongoose fixes those problems.
+The flexibility of MongoDB has a weakness: there's no protection against entering data in any arbitrary format, and no validation of any sort.  Mongoose helps with those problems.
 
 ## Objectives
 
-* Use Mongoose to enforce completeness and validity requirements on data
-* Use Mongoose as an object-document mapper within a Javascript program
+* Use Mongoose to help validate data to be stored in MongoDB
+* Use Mongoose as an object-document mapper within a JavaScript program
 
-## Installation and Scaffolding
+## Instructions
 
-At the top level of the repository:
+Fork and clone this repository
 
-```
-npm install mongoose --save
-```
-
-We say `--save` because we want Mongoose to become a required dependency for our project.
-
-At the beginning of your file:
-
-```
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/contacts');
-```
 ## Mongoose is an Object-Document Mapper
 
-What does that mean?  We have objects in our Javascript and documents in our MongoDB, and Mongoose bridges between them.
+What does that mean?  We have objects in our JavaScript and documents in our MongoDB, and Mongoose bridges between them.
 
-So before we start dealing with databases, we're going to start putting together a command-line contacts command.
+We'll learn about Mongoose by building some command line scripts.
 
-## Mongoose has Schemas that turn into Models
+## Mongoose has [Schemas](http://mongoosejs.com/docs/guide.html) that we use to create Models
 
-```
+```js
+var mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/<database name>');
+
 var Schema = mongoose.Schema;
 
-var contactSchema = newSchema({
+var contactSchema = new Schema({
 
-    // we define what we're willing to accept in a Contact
-    // keys are as usual; values are String, Number, Date,
-    // Boolean, ObjectId, Array
+  name: {
+    first: String,
+    last: String
+  }
 
 });
+
+var Contact = mongoose.model( 'Contact', contactSchema);
+
 ```
+
+We'll use the models to interact with appropriately named collections of documents.  Mongoose maps the model 'Contact' to the collection contacts.
+
+```
+var c = Contact.create({ ...info... });
+```
+
+# Virtual attributes
 
 We can add calculated attributes to the model too.  These are called 'virtual attributes.'  Assume we have name.first and name.last properties: we can derive a name.full property from them.
 
-```
+```js
 contactSchema.virtual('name.full').get(function () {
   return this.name.first + ' ' + this.name.last;
 });
@@ -57,15 +63,7 @@ contactSchema.virtual('name.full').set(function (name) {
 });
 ```
 
-When all that is done:
-
-```
-var Contact = mongoose.model( 'Contact', contactSchema);
-```
-
-## Using models in our classes
-
-We can use Mongo syntax to find things!
+## Using models
 
 We can also use Mongoose query syntax:
 
@@ -80,10 +78,8 @@ query.exec(function(err, contact){
 
 ## Validation
 
-Back to the schema!
-
 ```
-var contactSchema = newSchema({
+var contactSchema = new Schema({
 
     // first and last names are required
 
@@ -102,7 +98,7 @@ var contactSchema = newSchema({
 
     // political party must be in the list
 
-    politicalParty: {  type: String, 
+    politicalParty: {  type: String,
             enum: { values: 'Republican Democrat Libertarian Green',
                     message: 'enum failed at path {PATH} with value {VALUE}' },
             }
@@ -116,15 +112,6 @@ var contactSchema = newSchema({
 });
 ```
 
-
-## Finally:
-
-```
-var c = Contact.create({ ...info... });
-c.save();
-```
-
 ## References
 
 * The Mongoose API docs at [http://mongoosejs.com/docs/api.html](http://mongoosejs.com/docs/api.html)
-
