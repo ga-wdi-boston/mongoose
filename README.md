@@ -27,6 +27,9 @@ We'll learn about Mongoose by building a command line script.  Think of the scri
 - [Validations](http://mongoosejs.com/docs/validation.html) checks on our data.
 -
 
+We'll use these to create a command line crud app.
+
+### Schema
 
 ```js
 var mongoose = require('mongoose');
@@ -39,18 +42,27 @@ var peronsSchema = new mongoose.Schema({
   }
 
 });
+```
 
+### Model
+
+```
 var Person = mongoose.model( 'Person', PersonSchema);
 
 ```
 
 We'll use the models to interact with appropriately named collections of documents.  Mongoose maps the model 'Person' to the MongoDB collection people.
 
+### Document
+
 ```
-var person = Person.create({ ...info... });
+var person = Person.create({...});
+// or
+var person = new Person({...});
+person.save();
 ```
 
-# Virtual attributes
+### Virtual attributes
 
 We can add calculated attributes to the model too.  These are called 'virtual attributes.'  Assume we have name.given and name.surname properties: we can derive a name.full property from them.
 
@@ -68,7 +80,7 @@ personSchema.virtual('name.full').set(function (name) {
 
 ## Using models
 
-We can also use Mongoose query syntax:
+We'll use Mongoose to query MongoDB:
 
 ```
 var query = Person.findOne({ 'name.surname': 'Rollins' });
@@ -78,7 +90,7 @@ query.exec().then(function(person) {
 });
 ```
 
-## Validation
+### Validation
 
 ```
 var contactSchema = new Schema({
