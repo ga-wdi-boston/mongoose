@@ -1,17 +1,15 @@
 {
-  "name": "wdi_7_mongoose_intro",
+  "name": "mongoose-crud",
   "version": "0.1.0",
   "description": "An introduction to Mongoose.",
   "main": "app.js",
   "scripts": {
     "test": "grunt jasmine-nodejs"
   },
-  "author": "Charlton Wilbur",
-  "license": "BSD-3-Clause",
+  "author": "Antony Donovan",
+  "license": "MIT",
   "dependencies": {
-    "async": "^1.2.1",
-    "commander": "^2.8.1",
-    "mongoose": "^4.0.5"
+    "mongoose": "^4.2.6"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
@@ -22,7 +20,6 @@
     "grunt-jsbeautifier": "^0.2.10",
     "grunt-jscs": "^1.8.0",
     "grunt-jsonlint": "^1.0.4",
-    "grunt-node-inspector": "^0.2.0",
     "grunt-nodemon": "^0.4.0",
     "grunt-open": "^0.2.3",
     "load-grunt-config": "^0.17.1",
@@ -30,7 +27,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/ga-wdi-boston/wdi_7_mongoose_intro.git"
+    "url": "git://github.com/ga-wdi-boston/mongoose-crud.git"
   },
   "keywords": [
     "mongoose",
@@ -39,7 +36,7 @@
     "configuration"
   ],
   "bugs": {
-    "url": "https://github.com/ga-wdi-boston/wdi_7_mongoose_intro/issues"
+    "url": "https://github.com/ga-wdi-boston/mongoose-crud/issues"
   },
-  "homepage": "https://github.com/ga-wdi-boston/wdi_7_mongoose_intro#readme"
+  "homepage": "https://github.com/ga-wdi-boston/mongoose-crud#readme"
 }
