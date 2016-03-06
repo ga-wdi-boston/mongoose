@@ -1,15 +1,19 @@
-![General Assembly Logo](http://i.imgur.com/ke8USTq.png)
+[![General Assembly Logo](https://camo.githubusercontent.com/1a91b05b8f4d44b5bbfb83abac2b0996d8e26c92/687474703a2f2f692e696d6775722e636f6d2f6b6538555354712e706e67)](https://generalassemb.ly/education/web-development-immersive)
 
 # An Introduction to Mongoose
 
 The flexibility of MongoDB has a weakness: there's no protection against entering data in any arbitrary format, and no validation of any sort.  Mongoose helps with those problems.
+
+## Prerequisites
+
+- MongoDB
 
 ## Objectives
 
 * Use Mongoose to help validate data to be stored in MongoDB
 * Use Mongoose as an object-document mapper within a JavaScript program
 
-## Instructions
+## Preparation
 
 Fork, clone, and npm install.
 
@@ -114,7 +118,7 @@ var contactSchema = new Schema({
 });
 ```
 
-## References
+## Additional Resources
 
 * The Mongoose API docs at [http://mongoosejs.com/docs/api.html](http://mongoosejs.com/docs/api.html)
 
