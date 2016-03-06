@@ -1,43 +1,63 @@
-# Cortex
-neurons
 
-# Numerous always-ignore extensions
-*.bak
-*.patch
-*.diff
-*.err
+# Created by https://www.gitignore.io/api/osx,linux,windows
 
-# temp file for git conflict merging
-*.orig
-*.log
-*.rej
-*.swo
-*.swp
-*.zip
-*.vi
-*~
-*.sass-cache
-*.tmp.html
-*.dump
-
-# OS or Editor folders
+### OSX ###
 .DS_Store
-._*
-.cache
-.project
-.settings
-.tmproj
-*.esproj
-*.sublime-project
-*.sublime-workspace
-nbproject
-thumbs.db
-*.iml
+.AppleDouble
+.LSOverride
 
-# Folders to ignore
-.hg
-.svn
-.CVS
-.idea
-node_modules/
-jscoverage_lib/
+# Icon must end with two \r
+Icon
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+
+### Linux ###
+*~
+
+# temporary files which can be created if a process still has a handle open of a deleted file
+.fuse_hidden*
+
+# KDE directory preferences
+.directory
+
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
+
+
+### Windows ###
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
