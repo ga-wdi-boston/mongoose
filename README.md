@@ -2,16 +2,19 @@
 
 # An Introduction to Mongoose
 
-The flexibility of MongoDB has a weakness: there's no protection against entering data in any arbitrary format, and no validation of any sort.  Mongoose helps with those problems.
+The flexibility of MongoDB has a weakness:
+ there's no protection against entering data in any arbitrary format,
+ and no validation of any sort.
+Mongoose helps with those problems.
 
 ## Prerequisites
 
-- MongoDB
+-   MongoDB
 
 ## Objectives
 
-* Use Mongoose to help validate data to be stored in MongoDB
-* Use Mongoose as an object-document mapper within a JavaScript program
+-   Use Mongoose to help validate data to be stored in MongoDB
+-   Use Mongoose as an object-document mapper within a JavaScript program
 
 ## Preparation
 
@@ -19,17 +22,24 @@ Fork, clone, and npm install.
 
 ## Mongoose is an Object-Document Mapper
 
-What does that mean?  We have objects in our JavaScript and documents in our MongoDB, and Mongoose bridges between them.
+What does that mean?
+We have objects in our JavaScript and documents in our MongoDB,
+ and Mongoose bridges between them.
 
-We'll learn about Mongoose by building a command line script.  Think of the script as a similar to a controller and the Mongoose Models as the mechanism to access the data (ActiveRecord).
+We'll learn about Mongoose by building a command line script.
+Think of the script as a similar to a controller
+ and the Mongoose Models as the mechanism to access the data (ActiveRecord).
 
 ## Mongoose has
 
-- [Schemas](http://mongoosejs.com/docs/guide.html) that we use to create models.
-- [Models](http://mongoosejs.com/docs/models.html) - Constructors for documents
-- [Documents](http://mongoosejs.com/docs/documents.html) - a mapping from MongoDB to JavaScript
-- [Validations](http://mongoosejs.com/docs/validation.html) checks on our data.
--
+-   [Schemas](http://mongoosejs.com/docs/guide.html)
+     that we use to create models.
+-   [Models](http://mongoosejs.com/docs/models.html) -
+     Constructors for documents
+-   [Documents](http://mongoosejs.com/docs/documents.html) -
+     a mapping from MongoDB to JavaScript
+-   [Validations](http://mongoosejs.com/docs/validation.html)
+     to check on our data.
 
 We'll use these to create a command line crud app.
 
@@ -50,25 +60,30 @@ var peronsSchema = new mongoose.Schema({
 
 ### Model
 
-```
+```javascript
 var Person = mongoose.model( 'Person', PersonSchema);
 
 ```
 
-We'll use the models to interact with appropriately named collections of documents.  Mongoose maps the model 'Person' to the MongoDB collection people.
+We'll use the models to interact with
+ appropriately named collections of documents.
+Mongoose maps the model 'Person' to the MongoDB collection `people`.
 
 ### Document
 
-```
+```javascript
 var person = Person.create({...});
 // or
 var person = new Person({...});
 person.save();
 ```
 
-### Virtual attributes
+### Virtual Attributes
 
-We can add calculated attributes to the model too.  These are called 'virtual attributes.'  Assume we have name.given and name.surname properties: we can derive a name.full property from them.
+We can add calculated attributes to the model too.
+These are called 'virtual attributes.'
+Assume we have name.given and name.surname properties:
+ we can derive a name.full property from them.
 
 ```js
 personSchema.virtual('name.full').get(function () {
@@ -82,11 +97,11 @@ personSchema.virtual('name.full').set(function (name) {
 });
 ```
 
-## Using models
+## Using Models
 
 We'll use Mongoose to query MongoDB:
 
-```
+```javascript
 var query = Person.findOne({ 'name.surname': 'Rollins' });
 query.exec().then(function(person) {
     console.log('full name: %s, given: %s, surname %s',
@@ -96,7 +111,7 @@ query.exec().then(function(person) {
 
 ### Validation
 
-```
+```javascript
 var contactSchema = new Schema({
 
     // given and surname are required
@@ -120,7 +135,7 @@ var contactSchema = new Schema({
 
 ## Additional Resources
 
-* The Mongoose API docs at [http://mongoosejs.com/docs/api.html](http://mongoosejs.com/docs/api.html)
+-   The Mongoose API docs at [http://mongoosejs.com/docs/api.html](http://mongoosejs.com/docs/api.html)
 
 ## [License](LICENSE)
 
