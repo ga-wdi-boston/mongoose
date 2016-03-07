@@ -57,22 +57,23 @@ The core elements of Mongoose are:
 Let's look at an example.
 
 ```javascript
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var personSchema = new mongoose.Schema({
+const personSchema = new mongoose.Schema({
   name: {
     given: String,
     surname: String
   }
 });
 
-var Person = mongoose.model('Person', PersonSchema);
+const Person = mongoose.model('Person', PersonSchema);
 
-var person = Person.create({...});
+let person = Person.create({...});
 // alternatively,
-/* var person = new Person({...});
-   person.save();*/
-
+/*
+   let person = new Person({...});
+   person.save();
+*/
 ```
 
 `personSchema` above is a new Mongoose Schema;
