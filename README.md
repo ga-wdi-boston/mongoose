@@ -19,8 +19,10 @@ Fortunately, there's a tool called Mongoose that will help to address these
 
 ## Objectives
 
--   Use Mongoose to help validate data to be stored in MongoDB
--   Use Mongoose as an object-document mapper within a JavaScript program
+-   Use Mongoose to access and manipulate a MongoDB database from
+     a JavaScript program.
+-   Use JavaScript Promises to combine Mongoose operations.
+-   Set up validations in Mongoose to validate data for storage in MongoDB.
 
 ## Preparation
 
