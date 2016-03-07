@@ -1,18 +1,18 @@
 // jshint node: true
 'use strict';
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/mongoose-crud');
-var db = mongoose.connection;
+const db = mongoose.connection;
 
-var Person = require('./models/person.js');
+const Person = require('./models/person.js');
 
-var done = function() {
+const done = function() {
   db.close();
 };
 
-var create = function(givenName, surname, dob, gender) {
+const create = function(givenName, surname, dob, gender) {
   Person.create({
     'name.given': givenName,
     'name.surname': surname,
@@ -25,31 +25,31 @@ var create = function(givenName, surname, dob, gender) {
   }).then(done);
 };
 
-var index = function() {
-  Person.find().exec().then(function(people) {
+const index = function() {
+  Person.find().then(function(people) {
     people.forEach(function(person) {
       console.log(person.toJSON());
     });
   }).catch(console.error).then(done);
 };
 
-var destroy = function(id) {
-  Person.findById(id).exec().then(function(person) {
+const destroy = function(id) {
+  Person.findById(id).then(function(person) {
     return person.remove();
   }).catch(console.error
   ).then(done);
 };
 
-var read = function(field, criterion) {
-  var search = {};
+const read = function(field, criterion) {
+  let search = {};
   if (criterion[0] === '/') {
-    var regex = new RegExp(criterion.slice(1, criterion.length - 1));
+    let regex = new RegExp(criterion.slice(1, criterion.length - 1));
     search[field] = regex;
   } else {
     search[field] = criterion;
   }
 
-  Person.find(search).exec().then(function(people) {
+  Person.find(search).then(function(people) {
     people.forEach(function(person) {
       console.log(person.toObject());
     });
@@ -57,60 +57,62 @@ var read = function(field, criterion) {
   ).then(done);
 };
 
-var update = function(id, field, value) {
-  var modify = {};
+const update = function(id, field, value) {
+  let modify = {};
   modify[field] = value;
-  Person.findByIdAndUpdate(id, { $set: modify }, { new: true }).exec().then(function(person) {
+  Person.findByIdAndUpdate(id, { $set: modify }, { new: true }).then(function(person) {
     console.log(person.toJSON());
   }).catch(console.error
   ).then(done);
 };
 
 db.once('open', function() {
-  var command = process.argv[2];
+  let command = process.argv[2];
 
   // Using more than once, avoiding jshint complaints
-  var field;
-  var id;
+  let field;
+  let id;
 
   switch (command) {
     case 'c':
-      var givenName = process.argv[3];
-      var surname = process.argv[4];
-      var dob =  process.argv[5];
-      var gender =  process.argv[6];
+      let givenName = process.argv[3];
+      let surname = process.argv[4];
+      let dob =  process.argv[5];
+      let gender =  process.argv[6];
       if (true || givenName) {
         create(givenName, surname, dob, gender);
       } else {
         console.log('usage c <given_name> <surname> <date of birth> [gender]');
         done();
       }
+      break;
 
-    break;
     case 'r':
       field  = process.argv[3];
-      var criterion = process.argv[4];
+      let criterion = process.argv[4];
       if (!criterion) {
         console.log('usage: r <field> <criterion>');
         done();
       } else {
         read(field, criterion);
       }
+      break;
 
-    break;
     case 'u':
       id = process.argv[3];
       field = process.argv[4];
-      var value = process.argv[5];
+      let value = process.argv[5];
       update(id, field, value);
-    break;
+      break;
+
     case 'd':
       id = process.argv[3];
       destroy(id);
-    break;
+      break;
+
     default:
       index();
-    break;
+      break;
   }
 
 });

@@ -1,9 +1,9 @@
 // jshint node: true
 'use strict';
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var personSchema = new mongoose.Schema({
+const personSchema = new mongoose.Schema({
   dob: {
     type: Date,
     required: true,
@@ -33,8 +33,8 @@ var personSchema = new mongoose.Schema({
 });
 
 personSchema.virtual('age').get(function() {
-  var today = new Date();
-  var thisYear = today.getFullYear();
+  let today = new Date();
+  let thisYear = today.getFullYear();
   if (!this.dob) {
     return 0;
   }
@@ -47,6 +47,6 @@ personSchema.virtual('age').get(function() {
 });
 
 // model
-var Person = mongoose.model('Person', personSchema);
+const Person = mongoose.model('Person', personSchema);
 
 module.exports = Person;
