@@ -169,6 +169,87 @@ const Person = require('./models/person.js');
 
 Great! Now let's actually get into writing the CRUD actions.
 
+#### Create
+
+Finishing the `create` method will be pretty straightforward,
+ since Mongoose already gives us a `create` method.
+
+According to the documentation, here is the signature for `create`:
+
+```javascript
+Model.create(doc(s), [callback])
+```
+
+This means that the `create` method takes an object representing a document
+ (or several objects, representing multiple documents)
+ with an optional callback as the final argument.
+That callback will be handed several arguments:
+ first, a reference to any errors created during the `create` operation,
+ and
+ second, a list of references to the newly created documents
+ (one for each object passed in).
+
+Suppose that we also want to print out the newly created Person
+ once we've created it.
+We could write:
+
+```javascript
+const create = function(givenName, surname, dob, gender) {
+  Person.create({
+    'name.given': givenName,
+    'name.surname': surname,
+    dob: dob,
+    gender: gender,
+  }, function(err, person){
+    console.log(person.toJSON());
+    done();   // We need to call this to terminate the connection.
+  })
+};
+```
+
+However, if we wanted any other functions to run in sequence
+ after the `create` finished,
+ it's easy to see how you could end up in the infamous 'callback hell'.
+Let's try and refactor this using Promises instead.
+
+```javascript
+const create = function(givenName, surname, dob, gender) {
+  Person.create({
+    'name.given': givenName,
+    'name.surname': surname,
+    dob: dob,
+    gender: gender,
+  }).then(function(person){
+    console.log(person.toJSON());
+    done();   // We need to call this to terminate the connection.
+  }).catch(function(err){
+    console.error(err);
+  });
+};
+```
+
+Since we're using Promises, we can also move `done` to the end of the
+ Promise chain.
+
+```javascript
+  ...
+  }).then(function(person){
+    console.log(person.toJSON());
+  }).catch(function(err){
+    console.error(err);
+  }).then(done);
+};
+```
+
+Also, since that last function is just wrapping around `console.error`,
+ we can simplify the `catch` as
+
+```javascript
+  ...
+  }).catch(console.error).then(done);
+};
+```
+
 
 ### Virtual Attributes
 
