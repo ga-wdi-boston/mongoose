@@ -28,63 +28,62 @@ Fortunately, there's a tool called Mongoose that will help to address these
 
 Fork and clone this repo; then run `npm install`.
 
-## Mongoose is an Object-Document Mapper
+## Mongoose Schemas, Models, and Documents
+
+**"Mongoose is an Object-Document Mapper"**
 
 What does that mean?
-We have objects in our JavaScript and documents in our MongoDB,
- and Mongoose bridges between them.
 
-We'll learn about Mongoose by building a command line script.
-Think of the script as a similar to a controller
- and the Mongoose Models as the mechanism to access the data (ActiveRecord).
+When we were learning about Rails, we used a tool called ActiveRecord;
+ ActiveRecord was an "Object-Relational Mapper",
+ a tool that allowed us to take relations (i.e. rows) from a SQL table
+ and represent them with Ruby objects.
+Mongoose fills a similar role, allowing us to represent documents
+ (the MongoDB analogue to SQL relations) using JavaScript objects.
+Additionally, because Mongoose fits in between our JS code and Mongo,
+ it's able to add some limitations on how Mongo gets used,
+ so that there's greater consistency in our data.
 
-## Mongoose has
+The core elements of Mongoose are:
 
--   [Schemas](http://mongoosejs.com/docs/guide.html)
-     that we use to create models.
--   [Models](http://mongoosejs.com/docs/models.html) -
-     Constructors for documents
--   [Documents](http://mongoosejs.com/docs/documents.html) -
-     a mapping from MongoDB to JavaScript
--   [Validations](http://mongoosejs.com/docs/validation.html)
-     to check on our data.
+-   [Documents](http://mongoosejs.com/docs/documents.html),
+     JavaScript objects that map to Documents in MongoDB.
+-   [Models](http://mongoosejs.com/docs/models.html),
+     which are Constructor functions that generate new Documents.
+-   [Schemas](http://mongoosejs.com/docs/guide.html),
+     which specify the properties that the Models give
+     to their respective Documents.
 
-We'll use these to create a command line crud app.
+Let's look at an example.
 
-### Schema
-
-```js
+```javascript
 var mongoose = require('mongoose');
 
 var personSchema = new mongoose.Schema({
-
   name: {
     given: String,
     surname: String
   }
-
 });
-```
 
-### Model
+var Person = mongoose.model('Person', PersonSchema);
 
-```javascript
-var Person = mongoose.model( 'Person', PersonSchema);
-
-```
-
-We'll use the models to interact with
- appropriately named collections of documents.
-Mongoose maps the model 'Person' to the MongoDB collection `people`.
-
-### Document
-
-```javascript
 var person = Person.create({...});
-// or
-var person = new Person({...});
-person.save();
+// alternatively,
+/* var person = new Person({...});
+   person.save();*/
+
 ```
+
+`personSchema` above is a new Mongoose Schema;
+ it specifies a `name` property with `given` and `surname` sub-properties.
+That Schema gets passes into `mongoose.model` as an argument,
+ where it is used to create the `Person` model;
+ Mongoose uses the first argument to map this model
+ to the MongoDB collection `people`.
+Finally, we call `Person.create` to create a new Person document,
+ and store the result in `person`.
+
 
 ### Virtual Attributes
 
