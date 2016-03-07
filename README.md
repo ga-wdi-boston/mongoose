@@ -2,10 +2,16 @@
 
 # An Introduction to Mongoose
 
-The flexibility of MongoDB has a weakness:
- there's no protection against entering data in any arbitrary format,
- and no validation of any sort.
-Mongoose helps with those problems.
+As you saw in the previous talk, MongoDB is extremely flexible -
+ if you want, you can store data of literally any structure in a collection,
+ even if you haven't defined that structure beforehand.
+However, this flexibility has a weakness:
+ since you can enter data in _**any arbitrary format**_,
+ and there's no built-in validation to permit/reject new documents,
+ there's no assurance that the documents in a collection
+ will be consistent in any way.
+Fortunately, there's a tool called Mongoose that will help to address these
+ problems.
 
 ## Prerequisites
 
