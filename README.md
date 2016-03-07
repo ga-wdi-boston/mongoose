@@ -85,6 +85,90 @@ That Schema gets passes into `mongoose.model` as an argument,
 Finally, we call `Person.create` to create a new Person document,
  and store the result in `person`.
 
+### Code-Along : Mongoose Schemas, Models, and Documents
+
+We're going to create a simple _command-line_ program that allows us
+ to perform CRUD in a MongoDB database called `mongoose-crud`
+ over a collection called `people`, and display JSON data back in the console.
+The code for this program will be found in `app.js`,
+ in the root of this repository.
+The code for reading from the console has already been written for us
+ so that we can focus _exclusively_ on the Mongoose piece of the puzzle.
+
+As you can see, the code in that section is incomplete.
+
+```javascript
+const create = function(givenName, surname, dob, gender) {
+  /* Add Code Here */
+};
+
+const index = function() {
+  /* Add Code Here */
+};
+
+const destroy = function(id) {
+  /* Add Code Here */
+};
+
+const read = function(field, criterion) {
+  /* Add Code Here */
+};
+
+const update = function(id, field, value) {
+  /* Add Code Here */
+};
+```
+
+We're going to add the missing code so that our app can do CRUD.
+
+First, we need to create the database that `app.js` references, `mongoose-crud`.
+
+```bash
+mongo mongoose-crud
+```
+
+Next, let's create a `person.js` file to hold the Schema and
+ Model for our new Person resource.
+To keep things organized, let's put `person.js` in the `models` directory.
+
+Inside `person.js`, let's first define a Schema for Person.
+
+```javascript
+const personSchema = new mongoose.Schema({
+  name: {
+    given: String,
+    surname: String
+  },
+  dob: Date,
+  gender: String
+}, {
+  timestamps: true
+});
+```
+
+In this example, a person has several properties:
+ `name.given`, `name.surname`, `dob`, and `gender`.
+Additionally, each Person document has timestamps indicated when it was created
+ and when it was last modified.
+
+Next, let's use the Schema to generate a new Model,
+ and export that Model out of the module.
+
+```javascript
+const Person = mongoose.model('Person', personSchema);
+
+module.exports = Person;
+```
+
+And, of course, we need to `require` this Model from `app.js`
+ if we want to be able to use it there.
+
+```javascript
+const Person = require('./models/person.js');
+```
+
+Great! Now let's actually get into writing the CRUD actions.
+
 
 ### Virtual Attributes
 
