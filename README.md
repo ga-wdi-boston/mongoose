@@ -26,7 +26,7 @@ Fortunately, there's a tool called Mongoose that will help to address these
 
 ## Preparation
 
-Fork, clone, and npm install.
+Fork and clone this repo; then run `npm install`.
 
 ## Mongoose is an Object-Document Mapper
 
