@@ -48,7 +48,7 @@ We'll use these to create a command line crud app.
 ```js
 var mongoose = require('mongoose');
 
-var peronsSchema = new mongoose.Schema({
+var personSchema = new mongoose.Schema({
 
   name: {
     given: String,
