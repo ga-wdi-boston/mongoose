@@ -106,15 +106,15 @@ const index = function() {
   /* Add Code Here */
 };
 
-const destroy = function(id) {
-  /* Add Code Here */
-};
-
-const read = function(field, criterion) {
+const show = function(id) {
   /* Add Code Here */
 };
 
 const update = function(id, field, value) {
+  /* Add Code Here */
+};
+
+const destroy = function(id) {
   /* Add Code Here */
 };
 ```
@@ -250,6 +250,147 @@ Also, since that last function is just wrapping around `console.error`,
 };
 ```
 
+#### Read
+
+Next, let's fill in the `index` and `read` (i.e. `search`) methods.
+To do this, we're going to need to query MongoDB using Mongoose.
+Mongoose has a couple of methods for doing this, just like ActiveRecord did.
+
+| Mongoose Method | Rough ActiveRecord Equivalent          |
+|:---------------:|:---------------------------------------|
+| `find`          | `where` (or, with no arguments, `all`) |
+| `findById`      | `find`                                 |
+| `findOne`       | `find_by`                              |
+
+For `index`, we want to get all People, so we'll use `find`.
+
+The Mongoose documentation gives the signature of `find` as
+
+```javascript
+Model.find(conditions, [projection], [options], [callback])
+```
+
+ where `conditions` are the search parameters, i.e. `{'name.given': 'Bob'}`;
+ optional parameters `projection` and `options` offer additional configuration;
+ lastly, `find` accepts a callback.
+
+We want to get all results, so we can pass in
+ an empty object as the first argument
+ and a callback function as the final argument.
+
+```javascript
+const index = function() {
+  Person.find({}, function(err, people){
+    if (err) {
+      console.error(err);
+      return;
+    }
+    people.forEach(function(person){
+      console.log(person.toJSON());
+    });
+    done();
+  })
+};
+```
+
+A little messy. Let's refactor this with Promises.
+
+```javascript
+const index = function() {
+  Person.find({}).then(function(people) {
+    people.forEach(function(person) {
+      console.log(person.toJSON());
+    });
+  }).catch(console.error).then(done);
+};
+```
+
+Note how now we didn't pass `find` a callback - that's how Mongoose knows
+ that it needs to return a Promise.
+
+If we wanted, we could easily add some code to `index`
+ to give it the ability to provide a filtered set of results,
+ searching based on some specified value or regular expression.
+
+```javascript
+const index = function() {
+  let search = {};
+  if (arguments[0] && arguments[1]) {
+    let field = arguments[0];
+    let criterion = arguments[1];
+    if (criterion[0] === '/') {   // If a regular expression
+      let regex = new RegExp(criterion.slice(1, criterion.length - 1));
+      search[field] = regex;
+    } else {                      // If not a regular expression
+      search[field] = criterion;
+    }
+  }
+  Person.find(search).then(function(people) {
+    people.forEach(function(person) {
+      console.log(person.toJSON());
+    });
+  }).catch(console.error).then(done);
+};
+```
+
+To add this to our app, we would only need to add another case to our switch:
+
+```javascript
+switch(command) {
+  //...
+  case 'search':
+    field  = process.argv[3];
+    let criterion = process.argv[4];
+    if (!criterion) {
+      console.log('usage: search <field> <criterion>');
+      done();
+    } else {
+      index(field, criterion);
+    }
+    break;
+  //...
+}
+```
+
+Now let's implement `show`. We'll use `findById` instead of `find`,
+ since we specifically want to look up a document by its ID.
+
+```javascript
+const show = function(id) {
+  Person.findById(id, function(err, person){
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(person.toJSON());
+    done();
+  });
+};
+```
+
+With Promises, this is even simpler.
+
+```javascript
+const show = function(id) {
+  Person.findById(id).then(function(){
+    console.log(person.toJSON());
+  }).catch(console.error).then(done);
+};
+```
+
+Let's use `find` again. We'll skip ahead and just use Promises this time.
+
+```js
+const read = function(field, criterion) {
+  // ...
+  Person.find(search).then(function(people) {
+    people.forEach(function(person) {
+      console.log(person.toObject());
+    });
+  }).catch(console.error
+  ).then(done);
+}
+```
 
 ### Virtual Attributes
 
