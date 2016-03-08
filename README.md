@@ -190,7 +190,7 @@ personSchema.virtual('name.full').set(function (name) {
 We're going to create a simple _command-line_ program that allows us
  to perform CRUD in a MongoDB database called `mongoose-crud`
  over a collection called `people`, and display JSON data back in the console.
-The code for this program will be found in `app.js`,
+The code for this program will be found in `app-people.js`,
  in the root of this repository.
 The code for reading from the console has already been written for us
  so that we can focus _exclusively_ on the Mongoose piece of the puzzle.
@@ -221,7 +221,8 @@ const destroy = function(id) {
 
 We're going to add the missing code so that our app can do CRUD.
 
-First, we need to create the database that `app.js` references, `mongoose-crud`.
+First, we need to create the database that `app-people.js` references,
+ `mongoose-crud`.
 
 ```bash
 mongo mongoose-crud
@@ -279,7 +280,7 @@ personSchema.virtual('age').get(function() {
 ```
 
 In this example, a person has several properties:
- `name.given`, `name.surname`, `dob`, `gender`, and `age` (a virtual property)
+ `name.given`, `name.surname`, `dob`, `gender`, and `age` (a virtual property).
 Additionally, each Person document has timestamps indicated when it was created
  and when it was last modified.
 
@@ -292,7 +293,7 @@ const Person = mongoose.model('Person', personSchema);
 module.exports = Person;
 ```
 
-And, of course, we need to `require` this Model from `app.js`
+And, of course, we need to `require` this Model from `app-people.js`
  if we want to be able to use it there.
 
 ```javascript
