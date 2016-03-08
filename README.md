@@ -445,6 +445,39 @@ const update = function(id, field, value) {
 };
 ```
 
+#### Destroy
+
+The `destroy` method should look a lot like the `show` and `update` methods.
+As with `show`, we might start with
+
+```javascript
+const destroy = function(id) {
+  Person.findById(id, function(err, person) {
+    //...
+  });
+};
+```
+
+or, if we're using Promises,
+
+```javascript
+const destroy = function(id) {
+  Person.findById(id).then(function(person){
+    //...
+  }).catch(/* ... */).then(/* ... */)
+};
+```
+
+The Mongoose method we want to use here is [`remove`](http://mongoosejs.com/docs/api.html#query_Query-remove);
+ our finished method looks like this:
+
+```javascript
+const destroy = function(id) {
+  Person.findById(id).then(function(person){
+    person.remove();
+  }).catch(console.error).then(done);
+};
+```
 
 ### Virtual Attributes
 
