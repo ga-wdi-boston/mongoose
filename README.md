@@ -85,7 +85,9 @@ That Schema gets passes into `mongoose.model` as an argument,
 Finally, we call `Person.create` to create a new Person document,
  and store the result in `person`.
 
-### Code-Along : Mongoose Schemas, Models, and Documents
+### Other Key Model Features: Validations and Virtual Properties
+
+## Code-Along : Mongoose Schemas, Models, and Documents
 
 We're going to create a simple _command-line_ program that allows us
  to perform CRUD in a MongoDB database called `mongoose-crud`
@@ -169,7 +171,7 @@ const Person = require('./models/person.js');
 
 Great! Now let's actually get into writing the CRUD actions.
 
-#### Create
+### Create
 
 Finishing the `create` method will be pretty straightforward,
  since Mongoose already gives us a `create` method.
@@ -250,7 +252,7 @@ Also, since that last function is just wrapping around `console.error`,
 };
 ```
 
-#### Read
+### Read
 
 Next, let's fill in the `index` and `read` (i.e. `search`) methods.
 To do this, we're going to need to query MongoDB using Mongoose.
@@ -378,7 +380,7 @@ const show = function(id) {
 };
 ```
 
-#### Update
+### Update
 
 To do an update in Rails, you need to
  (a) look up the record you want by its ID, and then
@@ -445,7 +447,7 @@ const update = function(id, field, value) {
 };
 ```
 
-#### Destroy
+### Destroy
 
 The `destroy` method should look a lot like the `show` and `update` methods.
 As with `show`, we might start with
