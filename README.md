@@ -378,19 +378,73 @@ const show = function(id) {
 };
 ```
 
-Let's use `find` again. We'll skip ahead and just use Promises this time.
+#### Update
 
-```js
-const read = function(field, criterion) {
-  // ...
-  Person.find(search).then(function(people) {
-    people.forEach(function(person) {
-      console.log(person.toObject());
+To do an update in Rails, you need to
+ (a) look up the record you want by its ID, and then
+ (b) have it update one or more of its values.
+As we've just seen, the first of these can be accomplished using `findById`.
+To do the second, we need to actually change a property on the document,
+ and then run [`.save`](http://mongoosejs.com/docs/api.html#model_Model-save).
+
+If we were to do that here in `update`, our code might look something like this:
+
+```javascript
+const update = function(id, field, value) {
+  Person.findById(id, function(err, person){
+    if (err) {
+      console.error(err);
+      return;
+    }
+    person[field] = value;
+    person.save(function(err){
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.log(person.toJSON());
+      done();
     });
-  }).catch(console.error
-  ).then(done);
-}
+  });
+};
 ```
+
+You can begin to see how this might lead to callback hell.
+Fortunately, Mongoose has another method which combines those steps,
+ called (quite naturally) `findByIdAndUpdate`.
+
+```javascript
+const update = function(id, field, value) {
+  let modify = {};
+  modify[field] = value;
+  Person.findByIdAndUpdate(id, { $set: modify }, { new: true }, function(err, person){
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log(person.toJSON());
+    done();
+  });
+};
+```
+
+The `{ new: true }` option above tells Mongoose to try to return the
+ modified document, rather than the original.
+
+This code is even more terse and flexible when written with Promises.
+
+```javascript
+const update = function(id, field, value) {
+  let modify = {};
+  modify[field] = value;
+  Person.findByIdAndUpdate(id, { $set: modify }, { new: true })
+    .then(function(person) {
+      console.log(person.toJSON());
+    }).catch(console.error)
+    .then(done);
+};
+```
+
 
 ### Virtual Attributes
 
