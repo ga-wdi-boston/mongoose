@@ -26,42 +26,44 @@ const create = function(givenName, surname, dob, gender) {
 };
 
 const index = function() {
-  Person.find().then(function(people) {
+  let search = {};
+  if (arguments[0] && arguments[1]) {
+    let field = arguments[0];
+    let criterion = arguments[1];
+    if (criterion[0] === '/') {
+      let regex = new RegExp(criterion.slice(1, criterion.length - 1));
+      search[field] = regex;
+    } else {
+      search[field] = criterion;
+    }
+  }
+
+  Person.find(search).then(function(people) {
     people.forEach(function(person) {
       console.log(person.toJSON());
     });
   }).catch(console.error).then(done);
 };
 
-const destroy = function(id) {
+const show = function(id) {
   Person.findById(id).then(function(person) {
-    return person.remove();
-  }).catch(console.error
-  ).then(done);
-};
-
-const read = function(field, criterion) {
-  let search = {};
-  if (criterion[0] === '/') {
-    let regex = new RegExp(criterion.slice(1, criterion.length - 1));
-    search[field] = regex;
-  } else {
-    search[field] = criterion;
-  }
-
-  Person.find(search).then(function(people) {
-    people.forEach(function(person) {
-      console.log(person.toObject());
-    });
-  }).catch(console.error
-  ).then(done);
+    console.log(person.toObject());
+  }).catch(console.error).then(done);
 };
 
 const update = function(id, field, value) {
   let modify = {};
   modify[field] = value;
-  Person.findByIdAndUpdate(id, { $set: modify }, { new: true }).then(function(person) {
-    console.log(person.toJSON());
+  Person.findByIdAndUpdate(id, { $set: modify }, { new: true })
+    .then(function(person) {
+      console.log(person.toJSON());
+    }).catch(console.error)
+    .then(done);
+};
+
+const destroy = function(id) {
+  Person.findById(id).then(function(person) {
+    return person.remove();
   }).catch(console.error
   ).then(done);
 };
@@ -74,7 +76,7 @@ db.once('open', function() {
   let id;
 
   switch (command) {
-    case 'c':
+    case 'create':
       let givenName = process.argv[3];
       let surname = process.argv[4];
       let dob =  process.argv[5];
@@ -87,25 +89,30 @@ db.once('open', function() {
       }
       break;
 
-    case 'r':
+    case `show`:
+      id = process.argv[3];
+      show(id);
+      break;
+
+    case 'search':
       field  = process.argv[3];
       let criterion = process.argv[4];
       if (!criterion) {
-        console.log('usage: r <field> <criterion>');
+        console.log('usage: search <field> <criterion>');
         done();
       } else {
-        read(field, criterion);
+        index(field, criterion);
       }
       break;
 
-    case 'u':
+    case 'update':
       id = process.argv[3];
       field = process.argv[4];
       let value = process.argv[5];
       update(id, field, value);
       break;
 
-    case 'd':
+    case 'destroy':
       id = process.argv[3];
       destroy(id);
       break;
