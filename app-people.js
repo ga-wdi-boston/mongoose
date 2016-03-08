@@ -48,7 +48,7 @@ db.once('open', function() {
       if (true || givenName) {
         create(givenName, surname, dob, gender);
       } else {
-        console.log('usage c <given_name> <surname> <date of birth> [gender]');
+        console.log('usage create <given_name> <surname> <date of birth> [gender]');
         done();
       }
       break;
