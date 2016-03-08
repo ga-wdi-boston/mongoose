@@ -185,7 +185,7 @@ personSchema.virtual('name.full').set(function (name) {
 });
 ```
 
-## Code-Along : Mongoose Schemas, Models, and Documents
+## Code-Along
 
 We're going to create a simple _command-line_ program that allows us
  to perform CRUD in a MongoDB database called `mongoose-crud`
@@ -555,6 +555,9 @@ const destroy = function(id) {
   }).catch(console.error).then(done);
 };
 ```
+
+## Lab
+
 
 ## Additional Resources
 
