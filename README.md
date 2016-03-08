@@ -233,74 +233,18 @@ Next, let's create a `person.js` file to hold the Schema and
 To keep things organized, let's put `person.js` in the `models` directory.
 
 Inside `person.js`, let's first define a Schema for Person.
-
-```javascript
-const personSchema = new mongoose.Schema({
-  dob: {
-    type: Date,
-    required: true,
-    match: /\d{4}-\d{2}-\d{2}/
-  },
-  name: {
-    given: {
-      type: String,
-      required: true
-    },
-    surname: {
-      type: String,
-      required: true
-    }
-  },
-  gender : {
-    type: String,
-    enum: {
-      values: ['f', 'm', 'n', 'o']
-    },
-    default: 'o'
-  }
-}, {
-  timestamps: true,
-  toObject: { virtuals: true },
-  toJSON: { virtuals: true }
-});
-
-personSchema.virtual('age').get(function() {
-  let today = new Date();
-  let thisYear = today.getFullYear();
-  if (!this.dob) {
-    return 0;
-  }
-  if (this.dob.getMonth() > today.getMonth() ||
-    this.dob.getMonth() === today.getMonth() &&
-    this.dob.getDate() >= today.getDate()) {
-    thisYear -= 1;
-  }
-  return thisYear - this.dob.getFullYear();
-});
-```
-
-In this example, a person has several properties:
+A person should have several properties:
  `name.given`, `name.surname`, `dob`, `gender`, and `age` (a virtual property).
-Additionally, each Person document has timestamps indicated when it was created
- and when it was last modified.
+Additionally, each Person document should have timestamps indicating
+ when it was created and when it was last modified.
 
-Next, let's use the Schema to generate a new Model,
+Next, we'll use the Schema to generate a new Model,
  and export that Model out of the module.
 
-```javascript
-const Person = mongoose.model('Person', personSchema);
-
-module.exports = Person;
-```
-
-And, of course, we need to `require` this Model from `app-people.js`
+Finally, we'll need to `require` this Model from `app-people.js`
  if we want to be able to use it there.
 
-```javascript
-const Person = require('./models/person.js');
-```
-
-Great! Now let's actually get into writing the CRUD actions.
+Now let's actually get into writing the CRUD actions.
 
 ### Create
 
