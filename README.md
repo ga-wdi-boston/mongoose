@@ -85,7 +85,105 @@ That Schema gets passes into `mongoose.model` as an argument,
 Finally, we call `Person.create` to create a new Person document,
  and store the result in `person`.
 
-### Other Key Model Features: Validations and Virtual Properties
+### Other Key Schema/Model Features
+
+#### Schema Options : Setters
+
+In addition to specifying what type of data each attribute is,
+ we can also specify other features,
+ such as default values or default transformations
+ (i.e. automatically uppercasing or lowercasing strings).
+
+This can be done by replacing the type's name in the Schema with an object,
+ like so:
+
+```javascript
+const someSchema = new mongoose.Schema({
+  name: {
+    given: {
+      type: String
+      set: capitalize
+    },
+    surname:  {
+      type: String
+      set: capitalize
+    },
+  }
+  location: {
+    type: String,
+    default: 'Boston'
+  }
+});
+```
+
+A full list of these options can be found in the [Mongoose API documentation](http://mongoosejs.com/docs/api.html).
+
+#### Schema Options : Validators
+
+As mentioned, MongoDB does not put any limitations on what you put in your
+ collections.
+Fortunately, Mongoose provides a way to add some boundaries using
+ [validators](http://mongoosejs.com/docs/validation.html).
+
+```javascript
+const someSchema = new Schema({
+    name: {
+      type: String,
+      required: true
+    },
+    height: Number
+});
+```
+
+Validators are associated with different 'SchemaTypes',
+ i.e. the kind of data that the attribute holds.
+Every SchemaType implements the `required` validator,
+ but they also each have their own type-specific validators built in.
+
+| Type    | Built-In Validators                            |
+|:-------:|:----------------------------------------------:|
+| String  | `enum`, `match`, `maxlength`, `minlength`      |
+| Number  | `max`, `min`                                   |
+| Date    | `max`, `min`                                   |
+
+Additionally, custom validators can be written for any type at any time,
+using the `validate` option:
+
+```javascript
+const someSchema = new Schema({
+    someEvenValue : {
+      type: Number
+      validate: {
+        validator: function(num){
+          return num%2 === 0;
+        },
+        message: 'Must be even.'
+      }
+    }
+});
+```
+
+#### Virtual Attributes
+
+Another neat feature of Schemas is the ability to define 'virtual attributes':
+ attributes whose values are interelated with the values of other attributes.
+In reality, these 'attributes' are actually just a pair of functions -
+ `get` and `set`, specifically.
+
+Assuming we have `name.given` and `name.surname` properties:
+ we can derive a `name.full property` from them.
+
+```js
+personSchema.virtual('name.full').get(function () {
+  return this.name.given + ' ' + this.name.surname;
+});
+
+personSchema.virtual('name.full').set(function (name) {
+  var split = name.split(' ');
+  this.name.given = split[0];
+  this.name.surname = split[1];
+});
+```
 
 ## Code-Along : Mongoose Schemas, Models, and Documents
 
@@ -479,61 +577,6 @@ const destroy = function(id) {
     person.remove();
   }).catch(console.error).then(done);
 };
-```
-
-### Virtual Attributes
-
-We can add calculated attributes to the model too.
-These are called 'virtual attributes.'
-Assume we have name.given and name.surname properties:
- we can derive a name.full property from them.
-
-```js
-personSchema.virtual('name.full').get(function () {
-  return this.name.given + ' ' + this.name.surname;
-});
-
-personSchema.virtual('name.full').set(function (name) {
-  var split = name.split(' ');
-  this.name.given = split[0];
-  this.name.surname = split[1];
-});
-```
-
-## Using Models
-
-We'll use Mongoose to query MongoDB:
-
-```javascript
-var query = Person.findOne({ 'name.surname': 'Rollins' });
-query.exec().then(function(person) {
-    console.log('full name: %s, given: %s, surname %s',
-        person.name.full, person.name.given, person.name.surname);
-});
-```
-
-### Validation
-
-```javascript
-var contactSchema = new Schema({
-
-    // given and surname are required
-
-    name: {
-      given: {
-        type: String,
-        required: true
-      },
-      surname: {
-        type: String,
-        required: true
-      },
-    },
-
-    // title is not required
-
-    title: String
-});
 ```
 
 ## Additional Resources
