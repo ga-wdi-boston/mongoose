@@ -235,19 +235,51 @@ Inside `person.js`, let's first define a Schema for Person.
 
 ```javascript
 const personSchema = new mongoose.Schema({
-  name: {
-    given: String,
-    surname: String
+  dob: {
+    type: Date,
+    required: true,
+    match: /\d{4}-\d{2}-\d{2}/
   },
-  dob: Date,
-  gender: String
+  name: {
+    given: {
+      type: String,
+      required: true
+    },
+    surname: {
+      type: String,
+      required: true
+    }
+  },
+  gender : {
+    type: String,
+    enum: {
+      values: ['f', 'm', 'n', 'o']
+    },
+    default: 'o'
+  }
 }, {
-  timestamps: true
+  timestamps: true,
+  toObject: { virtuals: true },
+  toJSON: { virtuals: true }
+});
+
+personSchema.virtual('age').get(function() {
+  let today = new Date();
+  let thisYear = today.getFullYear();
+  if (!this.dob) {
+    return 0;
+  }
+  if (this.dob.getMonth() > today.getMonth() ||
+    this.dob.getMonth() === today.getMonth() &&
+    this.dob.getDate() >= today.getDate()) {
+    thisYear -= 1;
+  }
+  return thisYear - this.dob.getFullYear();
 });
 ```
 
 In this example, a person has several properties:
- `name.given`, `name.surname`, `dob`, and `gender`.
+ `name.given`, `name.surname`, `dob`, `gender`, and `age` (a virtual property)
 Additionally, each Person document has timestamps indicated when it was created
  and when it was last modified.
 
