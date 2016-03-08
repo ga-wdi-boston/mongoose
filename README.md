@@ -558,6 +558,25 @@ const destroy = function(id) {
 
 ## Lab
 
+In your squads, repeat this exercise for a new resource, Places.
+Places have the following features:
+
+-   name (required)
+-   latitude (required)
+-   longitude (required)
+-   country
+-   isNorthernHemisphere? (virtual)
+-   isWesternHemisphere? (virtual)
+
+You should ensure that only reasonable values of latitude and longitude are
+ allowed to be added to the database.
+
+Create a new file for your Mongoose model, and load it from
+ the `app-places.js` file; that file will provide a command-line UI for
+ performing CRUD on you new Places resource.
+
+Like in the code-along, the 'action' methods in `app-places.js` have no content;
+ you'll need to fill them up with code for doing CRUD on your new model.
 
 ## Additional Resources
 
