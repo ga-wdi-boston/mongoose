@@ -486,38 +486,19 @@ const update = function(id, field, value) {
 };
 ```
 
-You can begin to see how this might lead to callback hell.
-Fortunately, Mongoose has another method which combines those steps,
- called (quite naturally) `findByIdAndUpdate`.
-
-```javascript
-const update = function(id, field, value) {
-  let modify = {};
-  modify[field] = value;
-  Person.findByIdAndUpdate(id, { $set: modify }, { new: true }, function(err, person){
-    if (err) {
-      console.error(err);
-      return;
-    }
-    console.log(person.toJSON());
-    done();
-  });
-};
-```
-
-The `{ new: true }` option above tells Mongoose to try to return the
- modified document, rather than the original.
-
 This code is even more terse and flexible when written with Promises.
 
 ```javascript
 const update = function(id, field, value) {
   let modify = {};
   modify[field] = value;
-  Person.findByIdAndUpdate(id, { $set: modify }, { new: true })
+  Person.findById(id)
     .then(function(person) {
+      person[field] = value;
+      return person.save();
+    }).then(
       console.log(person.toJSON());
-    }).catch(console.error)
+    ).catch(console.error)
     .then(done);
 };
 ```
