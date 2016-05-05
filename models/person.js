@@ -25,6 +25,14 @@ const personSchema = new mongoose.Schema({
       values: ['f', 'm', 'n', 'o']
     },
     default: 'o'
+  },
+  height: {
+    type: Number,
+    required: true
+  },
+  weight: {
+    type: Number,
+    required: true
   }
 }, {
   timestamps: true,
