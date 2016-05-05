@@ -15,7 +15,7 @@ const create = function(givenName, surname, dob, gender) {
   /* Add Code Here */
 };
 
-const index = function(field, criterion) {
+const index = function() {
   /* Add Code Here */
 };
 
