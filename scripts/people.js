@@ -7,7 +7,7 @@ const db = mongoose.connection;
 
 const Person = require('../models/person.js');
 
-const createPerson = require('./person.js');
+const mapPerson = require('./mapPerson.js');
 
 const done = function() {
   db.close();
@@ -26,7 +26,7 @@ const loadPeople = () =>
     parser.on('readable', () => {
       let record;
       while (record = parser.read()) { // jshint ignore:line
-        people.push(createPerson(record));
+        people.push(mapPerson(record));
       }
     });
 

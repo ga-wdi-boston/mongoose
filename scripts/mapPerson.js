@@ -1,6 +1,6 @@
 'use strict';
 
-const createPerson = function (h) {
+const mapPerson = function (h) {
   let newPerson = {
     name: {}
   };
@@ -15,4 +15,4 @@ const createPerson = function (h) {
   return newPerson;
 };
 
-module.exports = createPerson;
+module.exports = mapPerson;
