@@ -78,7 +78,7 @@ let person = Person.create({...});
 
 `personSchema` above is a new Mongoose Schema;
  it specifies a `name` property with `given` and `surname` sub-properties.
-That Schema gets passes into `mongoose.model` as an argument,
+That Schema gets passed into `mongoose.model` as an argument,
  where it is used to create the `Person` model;
  Mongoose uses the first argument to map this model
  to the MongoDB collection `people`.
@@ -496,9 +496,9 @@ const update = function(id, field, value) {
     .then(function(person) {
       person[field] = value;
       return person.save();
-    }).then(
+    }).then(function(person) {
       console.log(person.toJSON());
-    ).catch(console.error)
+    }).catch(console.error)
     .then(done);
 };
 ```
