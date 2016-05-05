@@ -234,7 +234,7 @@ To keep things organized, let's put `person.js` in the `models` directory.
 
 Inside `person.js`, let's first define a Schema for Person.
 A person should have several properties:
- `name.given`, `name.surname`, `dob`, `gender`, and `age` (a virtual property).
+ `name.given`, `name.surname`, `dob`, `gender`, `height`, `weight`, and `age` (a virtual property).
 Additionally, each Person document should have timestamps indicating
  when it was created and when it was last modified.
 
@@ -242,7 +242,9 @@ Next, we'll use the Schema to generate a new Model,
  and export that Model out of the module.
 
 Finally, we'll need to `require` this Model from `app-people.js`
- if we want to be able to use it there.
+ if we want to be able to use it there. And then we can run
+ `node scripts/people.js` to load people into our mongoose-crud people
+ collection in the correct format of our mongoose schema.
 
 Now let's actually get into writing the CRUD actions.
 
@@ -271,12 +273,14 @@ Suppose that we also want to print out the newly created Person
 We could write:
 
 ```javascript
-const create = function(givenName, surname, dob, gender) {
+const create = function(givenName, surname, dob, gender, height, weight) {
   Person.create({
     'name.given': givenName,
     'name.surname': surname,
     dob: dob,
     gender: gender,
+    height: height,
+    weight: weight
   }, function(err, person){
     console.log(person.toJSON());
     done();   // We need to call this to terminate the connection.
@@ -290,12 +294,14 @@ However, if we wanted any other functions to run in sequence
 Let's try and refactor this using Promises instead.
 
 ```javascript
-const create = function(givenName, surname, dob, gender) {
+const create = function(givenName, surname, dob, gender, height, weight) {
   Person.create({
     'name.given': givenName,
     'name.surname': surname,
     dob: dob,
     gender: gender,
+    height: height,
+    weight: weight
   }).then(function(person){
     console.log(person.toJSON());
     done();   // We need to call this to terminate the connection.
