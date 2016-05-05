@@ -6,20 +6,21 @@ mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/mongoose-crud');
 const db = mongoose.connection;
 
+const Person = require('./models/person.js');
+
 const done = function() {
   db.close();
 };
 
-// CRUD Actions
 const create = function(givenName, surname, dob, gender) {
   /* Add Code Here */
 };
 
-const index = function(field, criterion) {
+const index = function() {
   /* Add Code Here */
 };
 
-const show = function() {
+const show = function(id) {
   /* Add Code Here */
 };
 
@@ -31,7 +32,6 @@ const destroy = function(id) {
   /* Add Code Here */
 };
 
-// UI
 db.once('open', function() {
   let command = process.argv[2];
 
@@ -48,7 +48,7 @@ db.once('open', function() {
       if (true || givenName) {
         create(givenName, surname, dob, gender);
       } else {
-        console.log('usage create <given_name> <surname> <date of birth> [gender]');
+        console.log('usage c <given_name> <surname> <date of birth> [gender]');
         done();
       }
       break;
