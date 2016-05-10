@@ -37,6 +37,16 @@ const loadPeople = () =>
 
 db.once('open', function () {
   loadPeople().then((people) => {
-    Person.collection.insert(people);
-  }).catch(console.error).then(done);
+      // Below is the way to insert that bypasses mongoose validations
+      // Person.collection.insert(people);
+
+      // This inserts and runs the documents through mongoose validations
+      Person.insertMany(people, function(err, docs) {
+        if (err) {
+          throw err;
+        }
+        console.log(docs.length + ' documents inserted');
+        done();
+      });
+  }).catch(console.error);
 });
