@@ -63,12 +63,7 @@ const update = (id, field, value) => {
   modify[field] = value;
   Person.findById(id)
   .then((person) => {
-    if (field.includes('.')) {
-      let key = field.split('.');
-      person[key[0]][key[1]] = value;
-    } else {
-      person[field] = value;
-    }
+    person.set(field, value);
     return person.save();
   })
   .then((person) => {
