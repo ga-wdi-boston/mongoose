@@ -27,7 +27,7 @@ const create = function(givenName, surname, dob, gender, height, weight) {
   }).then(done);
 };
 
-const index = function() {
+const index = () => {
   let search = {};
   if (arguments[0] && arguments[1]) {
     let field = arguments[0];
@@ -45,7 +45,8 @@ const index = function() {
     people.forEach((person) => {
       console.log(person.toJSON());
     });
-  }).catch(console.error).then(done);
+  }).catch(console.error)
+  .then(done);
 };
 
 const show = (id) => {
@@ -62,7 +63,12 @@ const update = (id, field, value) => {
   modify[field] = value;
   Person.findById(id)
   .then((person) => {
-    person[field] = value;
+    if (field.includes('.')) {
+      let key = field.split('.');
+      person[key[0]][key[1]] = value;
+    } else {
+      person[field] = value;
+    }
     return person.save();
   })
   .then((person) => {

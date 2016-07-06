@@ -46,9 +46,9 @@ personSchema.virtual('age').get(function() {
   if (!this.dob) {
     return 0;
   }
-  if (this.getMonth() > today.getMonth() ||
-      this.getMonth() === today.getMonth() &&
-      this.getDate() >= today.getDate()) {
+  if (this.dob.getMonth() > today.getMonth() ||
+      this.dob.getMonth() === today.getMonth() &&
+      this.dob.getDate() >= today.getDate()) {
         thisYear -= 1;
       }
 
