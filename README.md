@@ -299,10 +299,10 @@ const create = function(givenName, surname, dob, gender, height, weight) {
     gender: gender,
     height: height,
     weight: weight
-  }).then(function(person){
+  }).then((person) => {
     console.log(person.toJSON());
     done();   // We need to call this to terminate the connection.
-  }).catch(function(err){
+  }).catch((err) => {
     console.error(err);
   });
 };
@@ -313,9 +313,9 @@ Since we're using Promises, we can also move `done` to the end of the
 
 ```javascript
   ...
-  }).then(function(person){
+}).then((person) => {
     console.log(person.toJSON());
-  }).catch(function(err){
+  }).catch((err) => {
     console.error(err);
   }).then(done);
 };
@@ -326,7 +326,8 @@ Also, since that last function is just wrapping around `console.error`,
 
 ```javascript
   ...
-  }).catch(console.error).then(done);
+  }).catch(console.error)
+  .then(done);
 };
 ```
 
@@ -377,11 +378,13 @@ A little messy. Let's refactor this with Promises.
 
 ```javascript
 const index = function() {
-  Person.find({}).then(function(people) {
-    people.forEach(function(person) {
+  Person.find({})
+  .then((people) => {
+    people.forEach((person) => {
       console.log(person.toJSON());
     });
-  }).catch(console.error).then(done);
+  }).catch(console.error)
+  .then(done);
 };
 ```
 
@@ -393,7 +396,7 @@ If we wanted, we could easily add some code to `index`
  searching based on some specified value or regular expression.
 
 ```javascript
-const index = function() {
+const index = () => {
   let search = {};
   if (arguments[0] && arguments[1]) {
     let field = arguments[0];
@@ -451,10 +454,13 @@ const show = function(id) {
 With Promises, this is even simpler.
 
 ```javascript
-const show = function(id) {
-  Person.findById(id).then(function(){
+const show = (id) => {
+  Person.findById(id)
+  .then(() => {
     console.log(person.toJSON());
-  }).catch(console.error).then(done);
+  })
+  .catch(console.error)
+  .then(done);
 };
 ```
 
@@ -492,11 +498,11 @@ const update = function(id, field, value) {
 This code is even more terse and flexible when written with Promises.
 
 ```javascript
-const update = function(id, field, value) {
+const update = (id, field, value) => {
   let modify = {};
   modify[field] = value;
   Person.findById(id)
-    .then(function(person) {
+    .then((person) => {
       person[field] = value;
       return person.save();
     }).then(function(person) {
@@ -522,10 +528,13 @@ const destroy = function(id) {
 or, if we're using Promises,
 
 ```javascript
-const destroy = function(id) {
-  Person.findById(id).then(function(person){
+const destroy = (id) => {
+  Person.findById(id)
+  .then((person) => {
     //...
-  }).catch(/* ... */).then(/* ... */)
+  })
+  .catch(/* ... */)
+  .then(/* ... */)
 };
 ```
 
@@ -533,10 +542,13 @@ The Mongoose method we want to use here is [`remove`](http://mongoosejs.com/docs
  our finished method looks like this:
 
 ```javascript
-const destroy = function(id) {
-  Person.findById(id).then(function(person){
+const destroy = (id) => {
+  Person.findById(id)
+  .then((person) => {
     person.remove();
-  }).catch(console.error).then(done);
+  })
+  .catch(console.error)
+  .then(done);
 };
 ```
 
