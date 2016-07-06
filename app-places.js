@@ -45,7 +45,7 @@ db.once('open', function() {
       let latitude = process.argv[4];
       let longitude =  process.argv[5];
       let country =  process.argv[6];
-      if (true || givenName) {
+      if (true || name) {
         create(name, latitude, longitude, country);
       } else {
         console.log('usage create <name> <latitutde> <longitude> [country]');
