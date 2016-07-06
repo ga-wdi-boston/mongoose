@@ -179,7 +179,7 @@ personSchema.virtual('name.full').get(function () {
 });
 
 personSchema.virtual('name.full').set(function (name) {
-  var split = name.split(' ');
+  let split = name.split(' ');
   this.name.given = split[0];
   this.name.surname = split[1];
 });
@@ -228,11 +228,8 @@ First, we need to create the database that `app-people.js` references,
 mongo mongoose-crud
 ```
 
-Next, let's create a `person.js` file to hold the Schema and
- Model for our new Person resource.
-To keep things organized, let's put `person.js` in the `models` directory.
-
-Inside `person.js`, let's first define a Schema for Person.
+Inside `person.js`, which is located in the `models` directory, let's first
+define a Schema for Person.
 A person should have several properties:
  `name.given`, `name.surname`, `dob`, `gender`, `height`, `weight`, and `age` (a virtual property).
 Additionally, each Person document should have timestamps indicating
