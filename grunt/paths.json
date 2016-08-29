@@ -1,32 +1,29 @@
 {
-  "source": [
-    "app.js",
-    "lib/**/*.js"
-  ],
-  "tests": [
-    "spec/**/*.spec.js"
-  ],
-  "other": [
-    "Gruntfile.js",
-    "grunt/*.js"
-  ],
-  "project": [
-    "app.js",
-    "lib/**/*.js",
-    "spec/**/*.spec.js"
-  ],
-  "source_json": [
-    "lib/**/*.json"
-  ],
-  "tests_json": [
-    "spec/**/*.json"
-  ],
-  "other_json": [
-    "grunt/*.json"
-  ],
-  "project_json": [
-    "grunt/*.json",
-    "lib/**/*.json",
-    "spec/**/*.spec.json"
-  ]
+  "src": {
+    "all": [
+      "lib/**/*.js",
+      "spec/**/*.spec.js"
+    ],
+    "spec": [
+      "spec/**/*.spec.js"
+    ],
+    "lib": [
+      "lib/**/*.js"
+    ]
+  },
+
+  "grunt": {
+    "all": [
+      "Gruntfile.js",
+      "grunt/*.js"
+    ]
+  },
+
+  "json": {
+    "all": [
+      "lib/**/*.json",
+      "spec/**/*.json",
+      "grunt/*.json"
+    ]
+  }
 }
