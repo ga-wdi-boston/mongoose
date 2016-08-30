@@ -265,71 +265,7 @@ That callback will be handed several arguments:
  second, a list of references to the newly created documents
  (one for each object passed in).
 
-Suppose that we also want to print out the newly created Person
- once we've created it.
-We could write:
-
-```javascript
-const create = function(givenName, surname, dob, gender, height, weight) {
-  Person.create({
-    'name.given': givenName,
-    'name.surname': surname,
-    dob: dob,
-    gender: gender,
-    height: height,
-    weight: weight
-  }, function(err, person){
-    console.log(person.toJSON());
-    done();   // We need to call this to terminate the connection.
-  })
-};
-```
-
-However, if we wanted any other functions to run in sequence
- after the `create` finished,
- it's easy to see how you could end up in the infamous 'callback hell'.
-Let's try and refactor this using Promises instead.
-
-```javascript
-const create = function(givenName, surname, dob, gender, height, weight) {
-  Person.create({
-    'name.given': givenName,
-    'name.surname': surname,
-    dob: dob,
-    gender: gender,
-    height: height,
-    weight: weight
-  }).then((person) => {
-    console.log(person.toJSON());
-    done();   // We need to call this to terminate the connection.
-  }).catch((err) => {
-    console.error(err);
-  });
-};
-```
-
-Since we're using Promises, we can also move `done` to the end of the
- Promise chain.
-
-```javascript
-  ...
-}).then((person) => {
-    console.log(person.toJSON());
-  }).catch((err) => {
-    console.error(err);
-  }).then(done);
-};
-```
-
-Also, since that last function is just wrapping around `console.error`,
- we can simplify the `catch` as
-
-```javascript
-  ...
-  }).catch(console.error)
-  .then(done);
-};
-```
+*Please follow as I code along this action.*
 
 ### Read
 
@@ -355,114 +291,12 @@ Model.find(conditions, [projection], [options], [callback])
  optional parameters `projection` and `options` offer additional configuration;
  lastly, `find` accepts a callback.
 
-We want to get all results, so we can pass in
- an empty object as the first argument
- and a callback function as the final argument.
-
-```javascript
-const index = function() {
-  Person.find({}, function(err, people){
-    if (err) {
-      console.error(err);
-      return;
-    }
-    people.forEach(function(person){
-      console.log(person.toJSON());
-    });
-    done();
-  })
-};
-```
-
-A little messy. Let's refactor this with Promises.
-
-```javascript
-const index = function() {
-  Person.find({})
-  .then((people) => {
-    people.forEach((person) => {
-      console.log(person.toJSON());
-    });
-  }).catch(console.error)
-  .then(done);
-};
-```
-
-Note how now we didn't pass `find` a callback - that's how Mongoose knows
- that it needs to return a Promise.
-
-If we wanted, we could easily add some code to `index`
- to give it the ability to provide a filtered set of results,
- searching based on some specified value or regular expression.
-
-```javascript
-const index = () => {
-  let search = {};
-  if (arguments[0] && arguments[1]) {
-    let field = arguments[0];
-    let criterion = arguments[1];
-    if (criterion[0] === '/') {   // If a regular expression
-      let regex = new RegExp(criterion.slice(1, criterion.length - 1));
-      search[field] = regex;
-    } else {                      // If not a regular expression
-      search[field] = criterion;
-    }
-  }
-  Person.find(search).then(function(people) {
-    people.forEach(function(person) {
-      console.log(person.toJSON());
-    });
-  }).catch(console.error).then(done);
-};
-```
-
-To add this to our app, we would only need to add another case to our switch:
-
-```javascript
-switch(command) {
-  //...
-  case 'search':
-    field  = process.argv[3];
-    let criterion = process.argv[4];
-    if (!criterion) {
-      console.log('usage: search <field> <criterion>');
-      done();
-    } else {
-      index(field, criterion);
-    }
-    break;
-  //...
-}
-```
+*Please follow along as I code this action.*
 
 Now let's implement `show`. We'll use `findById` instead of `find`,
  since we specifically want to look up a document by its ID.
 
-```javascript
-const show = function(id) {
-  Person.findById(id, function(err, person){
-    if (err) {
-      console.error(err);
-      return;
-    }
-    console.log(person.toJSON());
-    done();
-  });
-};
-```
-
-With Promises, this is even simpler.
-
-```javascript
-const show = (id) => {
-  Person.findById(id)
-  .then(() => {
-    console.log(person.toJSON());
-  })
-  .catch(console.error)
-  .then(done);
-};
-```
+*Please follow along as I code this action*
 
 ### Update
 
@@ -473,84 +307,15 @@ As we've just seen, the first of these can be accomplished using `findById`.
 To do the second, we need to actually change a property on the document,
  and then run [`.save`](http://mongoosejs.com/docs/api.html#model_Model-save).
 
-If we were to do that here in `update`, our code might look something like this:
-
-```javascript
-const update = function(id, field, value) {
-  Person.findById(id, function(err, person){
-    if (err) {
-      console.error(err);
-      return;
-    }
-    person[field] = value;
-    person.save(function(err){
-      if (err) {
-        console.error(err);
-        return;
-      }
-      console.log(person.toJSON());
-      done();
-    });
-  });
-};
-```
-
-This code is even more terse and flexible when written with Promises.
-
-```javascript
-const update = (id, field, value) => {
-  let modify = {};
-  modify[field] = value;
-  Person.findById(id)
-    .then((person) => {
-      person[field] = value;
-      return person.save();
-    }).then(function(person) {
-      console.log(person.toJSON());
-    }).catch(console.error)
-    .then(done);
-};
-```
+*Please follow along as I code*
 
 ### Destroy
 
 The `destroy` method should look a lot like the `show` and `update` methods.
-As with `show`, we might start with
-
-```javascript
-const destroy = function(id) {
-  Person.findById(id, function(err, person) {
-    //...
-  });
-};
-```
-
-or, if we're using Promises,
-
-```javascript
-const destroy = (id) => {
-  Person.findById(id)
-  .then((person) => {
-    //...
-  })
-  .catch(/* ... */)
-  .then(/* ... */)
-};
-```
 
 The Mongoose method we want to use here is [`remove`](http://mongoosejs.com/docs/api.html#query_Query-remove);
- our finished method looks like this:
 
-```javascript
-const destroy = (id) => {
-  Person.findById(id)
-  .then((person) => {
-    person.remove();
-  })
-  .catch(console.error)
-  .then(done);
-};
-```
+*Please follow along as I code*
 
 ## Lab
 
