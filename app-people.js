@@ -13,23 +13,97 @@ const done = function() {
 };
 
 const create = function(givenName, surname, dob, gender, height, weight) {
-  /* Add Code Here */
+  Person.create({
+    'name.given': givenName,
+    'name.surname': surname,
+    dob: dob,
+    gender: gender,
+    height: height,
+    weight: weight
+  }).then((person) =>{
+    console.log(person.toJSON());
+  }).catch(console.error)
+    .then(done);
 };
 
-const index = function() {
-  /* Add Code Here */
+const index = () => {
+  let search = {};
+  if (arguments[0] && arguments[1]){
+    let field = arguments[0];
+    let criterion = arguments[1];
+    if(criterion[0] === '/'){
+      let regex = new RexExp(criterion.slice(1, criterion.length));
+      search[field] = regex;
+    } else {
+      search[field] = criterion;
+    }
+  }
+  Person.find(search)
+    .then(function(people){
+      people.forEach(function(person){
+        console.log(person.toJSON());
+      });
+  })
+  .catch(console.error)
+  .then(done);
 };
+
+// const show = function(id) {
+//   Person.findById(id, function(err, person){
+//     if (err){
+//       console.error(err);
+//       return;
+//     }
+//     console.log(person.toJSON());
+//     done();
+//   });
+// };
 
 const show = function(id) {
-  /* Add Code Here */
+  Person.findById(id)
+    .then((person) =>{
+      console.log(person.toJSON());
+    })
+    .catch(console.error)
+    .then(done);
 };
 
+// const update = function(id, field, value) {
+//   Person.findById(id, function(err, person){
+//     if (err){
+//       console.error(err);
+//       return;
+//     }
+//     person[field] = value;
+//     person.save(function(err){
+//       if (err){
+//       console.error(err);
+//       return;
+//       }
+//       console.log(person.toJSON());
+//       done();
+//     });
+//   });
+// };
+
 const update = function(id, field, value) {
-  /* Add Code Here */
+  Person.findById(id)
+    .then((person) =>{
+      person[field] = value;
+      return person.save();
+  }).then(function(person){
+      console.log(person.toJSON());
+  }).catch(console.error)
+    .then(done);
 };
 
 const destroy = function(id) {
-  /* Add Code Here */
+  Person.findById(id)
+    .then((person) => {
+      person.remove();
+    })
+    .catch(console.error)
+    .then(done);
 };
 
 db.once('open', function() {
@@ -65,6 +139,17 @@ db.once('open', function() {
       field = process.argv[4];
       let value = process.argv[5];
       update(id, field, value);
+      break;
+
+    case 'search':
+      field = process.argv[3];
+      let criterion = process.argv[4];
+      if (!criterion){
+        console.log('Do this: search <field> <criterion>');
+        done();
+      } else {
+        index(field, criterion);
+      }
       break;
 
     case 'destroy':
