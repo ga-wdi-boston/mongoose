@@ -101,11 +101,11 @@ This can be done by replacing the type's name in the Schema with an object,
 const someSchema = new mongoose.Schema({
   name: {
     given: {
-      type: String
+      type: String,
       set: capitalize
     },
     surname:  {
-      type: String
+      type: String,
       set: capitalize
     },
   }
@@ -114,6 +114,12 @@ const someSchema = new mongoose.Schema({
     default: 'Boston'
   }
 });
+
+// if we were to use `capitalize` it would need to be defined elsewhere
+const capitalize = function(val) {
+  if (typeof val !== 'string') val = '';
+  return val.charAt(0).toUpperCase() + val.substring(1);
+};
 ```
 
 A full list of these options can be found in the [Mongoose API documentation](http://mongoosejs.com/docs/api.html).
