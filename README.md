@@ -66,7 +66,7 @@ const personSchema = new mongoose.Schema({
   }
 });
 
-const Person = mongoose.model('Person', PersonSchema);
+const Person = mongoose.model('Person', personSchema);
 
 let person = Person.create({...});
 // alternatively,
