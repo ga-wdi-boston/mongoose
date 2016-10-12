@@ -13,6 +13,7 @@ const done = function() {
   db.close();
 };
 
+// returns a promise and loads all muh people
 const loadPeople = () =>
   new Promise((resolve, reject) => {
     const people = [];
