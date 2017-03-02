@@ -87,7 +87,7 @@ Finally, we call `Person.create` to create a new Person document,
 
 ### Other Key Schema/Model Features
 
-#### Schema Options : Setters
+#### Schema Options: Setters
 
 In addition to specifying what type of data each attribute is,
  we can also specify other features,
@@ -124,7 +124,7 @@ const capitalize = function(val) {
 
 A full list of these options can be found in the [Mongoose API documentation](http://mongoosejs.com/docs/api.html).
 
-#### Schema Options : Validators
+#### Schema Options: Validators
 
 As mentioned, MongoDB does not put any limitations on what you put in your
  collections.
@@ -172,7 +172,7 @@ const someSchema = new Schema({
 #### Virtual Attributes
 
 Another neat feature of Schemas is the ability to define 'virtual attributes':
- attributes whose values are interelated with the values of other attributes.
+ attributes whose values are interrelated with the values of other attributes.
 In reality, these 'attributes' are actually just a pair of functions -
  `get` and `set`, specifically.
 
