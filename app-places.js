@@ -6,29 +6,73 @@ mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/mongoose-crud');
 const db = mongoose.connection;
 
+const Place = require('./models/place.js');
+
 const done = function() {
   db.close();
 };
 
 // CRUD Actions
 const create = function(name, latitude, longitude, country) {
-  /* Add Code Here */
+  Place.create({
+    name: name,
+    latitude: latitude,
+    longitude: longitude,
+    country: country,
+  }).then((place) =>{
+    console.log(place.toJSON());
+  }).catch(console.error)
+    .then(done);};
+
+const index = () => {
+  let search = {};
+  if (arguments[0] && arguments[1]){
+    let field = arguments[0];
+    let criterion = arguments[1];
+    if(criterion[0] === '/'){
+      let regex = new RexExp(criterion.slice(1, criterion.length));
+      search[field] = regex;
+    } else {
+      search[field] = criterion;
+    }
+  }
+  Place.find(search)
+    .then(function(places){
+      places.forEach(function(place){
+        console.log(place.toJSON());
+      });
+  })
+  .catch(console.error)
+  .then(done);
 };
 
-const index = function(field, criterion) {
-  /* Add Code Here */
-};
-
-const show = function() {
-  /* Add Code Here */
+const show = function(id) {
+  Place.findById(id)
+    .then((place) =>{
+      console.log(place.toJSON());
+    })
+    .catch(console.error)
+    .then(done);
 };
 
 const update = function(id, field, value) {
-  /* Add Code Here */
+  Place.findById(id)
+    .then((place) =>{
+      place[field] = value;
+      return place.save();
+  }).then(function(place){
+      console.log(place.toJSON());
+  }).catch(console.error)
+    .then(done);
 };
 
 const destroy = function(id) {
-  /* Add Code Here */
+  Place.findById(id)
+    .then((place) => {
+      place.remove();
+    })
+    .catch(console.error)
+    .then(done);
 };
 
 // UI
